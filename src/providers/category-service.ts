@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -24,11 +24,50 @@ export class CategoryService {
   }
 
      delete(id) {
-     //console.log('category-service');
       return new Promise((resolve, reject) => {
-        this.http.delete(this.baseUri + '/' + id)
+
+        this.http.delete(this.baseUri+ '/' +id)
+        
         .map(res => res.json())
+        
         .subscribe(data => {
+
+          resolve(data);
+        }, error => {
+          reject(error);
+        });
+      });
+    }
+
+    insert(category){
+      let headers  = new Headers();
+      headers.append('Content-Type', 'application/json')
+      return new Promise((resolve, reject) => {
+
+        this.http.post(this.baseUri, JSON.stringify(category), {headers: headers})
+        
+        .map(res => res.json())
+        
+        .subscribe(data => {
+
+          resolve(data);
+        }, error => {
+          reject(error);
+        });
+      });
+    }
+
+    update(category){
+       let headers  = new Headers();
+      headers.append('Content-Type', 'application/json')
+      return new Promise((resolve, reject) => {
+
+        this.http.put(this.baseUri, JSON.stringify(category), {headers: headers})
+        
+        .map(res => res.json())
+        
+        .subscribe(data => {
+
           resolve(data);
         }, error => {
           reject(error);

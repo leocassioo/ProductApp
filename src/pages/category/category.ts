@@ -1,23 +1,30 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
-
+import { NavController, AlertController, ModalController, ViewController, NavParams, Platform } from 'ionic-angular';
 import { CategoryService } from '../../providers/category-service';
+import { CategoryModalPage } from '../category-modal/category-modal';
 
 @Component({
   selector: 'page-category',
   templateUrl: 'category.html'
 })
+
 export class CategoryPage {
 
+  // static get parameters() {
+  //   return [[NavController]]
+  // }
   categories: Array<any>;
 
 
-  constructor(public navCtrl: NavController, public categoryService: CategoryService, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public categoryService: CategoryService, private nav: NavController,
+   public alertCtrl: AlertController, public modalCtrl: ModalController, public view: ViewController) {
+    
     this.findAll();
   }
 
+
+
   findAll() {
-    console.log('console findAll()');
     this.categoryService.findAll()
     .then((categories: Array<any>) => {
       this.categories = categories;
@@ -28,10 +35,9 @@ export class CategoryPage {
   }
 
    removeCategory(category) {
-     console.log('console removeCategory()');
-    let prompt = this.alertCtrl.create({
+    let alert = this.alertCtrl.create({
       title: 'Deletar Categoria',
-      message: 'Deseja realmente deletar a categoria?',
+      message: 'Deseja realmente deletar a categoria \'' + category.nome + '\'?',
       buttons: [
         {
           text: 'Cancelar',
@@ -40,11 +46,9 @@ export class CategoryPage {
           text: 'Deletar',
           handler: (data) => {
             this.categoryService.delete(category.id)
-            
             .then((res) => {
               if(res){
                 this.findAll();
-                //console.log('findAll do deletar');
               }
             }, (error) => {
               console.log('Erro ao deletar categoria ', error);
@@ -54,12 +58,13 @@ export class CategoryPage {
       ]
     });
 
-  // showAlert() {
-  //  let alert = this.alertCtrl.create({
-  //    title: 'New Friend!',
-  //    subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
-  //    buttons: ['OK']
-  //  });
-   prompt.present();
+   alert.present();
  }
+
+   addCategory() {
+
+     let modal = this.modalCtrl.create(CategoryModalPage);
+     modal.present();
+
+   }
 }
