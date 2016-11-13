@@ -6,14 +6,22 @@
 
 <ion-content padding>
 
-  <ion-list>
+<ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Atualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list >
     <ion-item-sliding *ngFor="let c of categories">
       <ion-item>
         {{ c.nome }}
-        {{ c.id }}
       </ion-item>
       <ion-item-options>
-        <button ion-button color="primary">
+        <button ion-button color="primary" (click)="updateCategory(c)">
           <ion-icon name="create"></ion-icon>
         </button>
         <button ion-button color="danger" (click)="removeCategory(c)">
@@ -23,8 +31,6 @@
 
 
     </ion-item-sliding> 
-
-    <button ion-button (click)="addCategory()"> shit </button>
   </ion-list>
 
   <ion-fab right bottom>

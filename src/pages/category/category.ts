@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, ModalController, ViewController, NavParams, Platform } from 'ionic-angular';
+import { NavController, AlertController, ModalController, ViewController } from 'ionic-angular';
 import { CategoryService } from '../../providers/category-service';
 import { CategoryModalPage } from '../category-modal/category-modal';
 
@@ -10,21 +10,22 @@ import { CategoryModalPage } from '../category-modal/category-modal';
 
 export class CategoryPage {
 
-  // static get parameters() {
-  //   return [[NavController]]
-  // }
   categories: Array<any>;
 
 
-  constructor(public navCtrl: NavController, public categoryService: CategoryService, private nav: NavController,
-   public alertCtrl: AlertController, public modalCtrl: ModalController, public view: ViewController) {
+  constructor(
+    public navCtrl: NavController, 
+    public categoryService: CategoryService, 
+    public alertCtrl: AlertController, 
+    public modalCtrl: ModalController, 
+    public view: ViewController
+    ) {
     
     this.findAll();
+
   }
 
-
-
-  findAll() {
+   public findAll() {
     this.categoryService.findAll()
     .then((categories: Array<any>) => {
       this.categories = categories;
@@ -62,9 +63,20 @@ export class CategoryPage {
  }
 
    addCategory() {
-
-     let modal = this.modalCtrl.create(CategoryModalPage);
-     modal.present();
-
+    this.navCtrl.push(CategoryModalPage);
    }
+
+    doRefresh(refresher) {
+    setTimeout(() => {
+      this.findAll();
+      refresher.complete();
+    }, 2000);
+  }
+
+  updateCategory(category) {
+      this.navCtrl.push(CategoryModalPage, { category: category });
+  }
+
+
+
 }
